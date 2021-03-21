@@ -14,7 +14,11 @@ function createWindow() {
     }
   })
   mainWindow.webContents.openDevTools()
-  mainWindow.loadURL('http://localhost:3000')
+  if(__DEV__) {
+    mainWindow.loadURL('http://localhost:3000')
+  } else {
+    mainWindow.loadURL(path.join(__dirname, "../../dist/index"))
+  }
 }
 app.on('ready', createWindow)
 ipcMain.on('toMainProcess', (event, data) => {
