@@ -15,9 +15,11 @@ function createWindow() {
   })
   mainWindow.webContents.openDevTools()
   if(__DEV__) {
+    console.log("runing in DEVELOPMENT process!")
     mainWindow.loadURL('http://localhost:3000')
   } else {
-    mainWindow.loadURL(path.join(__dirname, "../../dist/index"))
+    console.log("runing in PRODUCTION process!")
+    mainWindow.loadURL(path.join(__dirname, "../../build/index.html"))
   }
 }
 app.on('ready', createWindow)
@@ -36,4 +38,3 @@ ipcMain.handle("invoke", (event, data) => new Promise((res, rej) => {
    */
   res(data)
 }))
-console.log("process.env.NODE_ENV: " + process.env.NODE_ENV)
