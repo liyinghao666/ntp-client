@@ -27,7 +27,7 @@ function App() {
         >
           Learn React
         </a>
-        <a>
+        <a href="a">
           {test}
         </a>
       </header>

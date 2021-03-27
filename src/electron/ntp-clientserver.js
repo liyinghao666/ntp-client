@@ -65,25 +65,44 @@ let ntpPackage = [
 // |                                                               |
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-udpClient.on("message", (msg, rinfo) => {
-  let result = []
-  for(let i = 0; i < msg.length; i++) {
-    result.push(msg[i])
-  }
-  console.log(`收到信息,长度${msg.length}, 来自${rinfo.address} : ${rinfo.port}`)
-  for(let i = 0; i < result.length; i++) {
-    if(i % 4 === 0) {
-      console.log(Buffer.from(result.slice(i, i + 4)))
-    }
-  }
-  let seconds = (((result[40] * 256) + result[41]) * 256 + result[42]) * 256 + result[43]
-  let d = new Date()
-  d.setTime(0)
-  d.setUTCSeconds(seconds + 8*60*60)
-  d.setUTCFullYear(d.getUTCFullYear() - 70)
-  console.log(d)
-  udpClient.close()
 
-})
-udpClient.send(Buffer.from(ntpPackage),0, ntpPackage.length,123, SERVER_ALI, (err, bytes) => {})
-
+module.exports =  function ntpCS() {
+  return Promise.race([
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({
+          state: "timeout 2s"
+        })
+      }, 2000);
+    }),
+    new Promise((resolve, reject) => {
+      udpClient.once("message", (msg, rinfo) => {
+        let result = []
+        for(let i = 0; i < msg.length; i++) {
+          result.push(msg[i])
+        }
+        for(let i = 0; i < result.length; i++) {
+          if(i % 4 === 0) {
+            console.log(Buffer.from(result.slice(i, i + 4)))
+          }
+        }
+        let seconds = (((result[40] * 256) + result[41]) * 256 + result[42]) * 256 + result[43]
+        let d = new Date()
+        d.setTime(0)
+        d.setUTCSeconds(seconds + 8*60*60)
+        d.setUTCFullYear(d.getUTCFullYear() - 70)
+        resolve({
+          state: "success",
+          data: d
+        })
+        udpClient.close()
+      })
+      udpClient.send(Buffer.from(ntpPackage), 0, ntpPackage.length, 123, SERVER_ALI, (err, bytes) => {
+        if(err) {
+          udpClient.close()
+          reject(err)
+        }
+      })  
+    })
+  ])
+}
