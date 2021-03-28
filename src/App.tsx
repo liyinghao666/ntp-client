@@ -1,15 +1,11 @@
-import React from 'react';
-import './App.css';
-import { useDispatch, useSelector, RootStateOrAny } from "react-redux"
+import React, { useEffect } from 'react';
+import './App.less';
+import { useSelector, RootStateOrAny } from "react-redux"
 
 function App() {
-  window.api.receive("toRendererProcess", () => {});
-  window.api.send("toMainProcess", "aaa");
-  window.api.invoke("invoke", "我在invoke").then((res: any) => console.log(res))
-  const dispatch = useDispatch()
-  dispatch({
-    type: "TEST"
-  })
+  useEffect(() => {
+    window.api.get("/api/test").then((res: any) => console.log(res))
+  }, [])
   const test = useSelector((state: RootStateOrAny) => state.test.get("test"))
   return (
     <div className="App">
@@ -23,7 +19,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Learn React and Electron
         </a>
         <a href="a">
           {test}

@@ -1,7 +1,11 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const fs = require('fs')
+const axios = require("axios").default
+
 const __DEV__ = process.env.NODE_ENV === 'development'
+const __SERVER_ADDRESS__ = process.env.SERVER_ADDRESS ? process.env.SERVER_ADDRESS : "http://127.0.0.1:3000"
+
 let mainWindow = null
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -38,3 +42,23 @@ ipcMain.handle("invoke", (event, data) => new Promise((res, rej) => {
    */
   res(data)
 }))
+ipcMain.handle("get", (event, data) => {
+  data.url = __SERVER_ADDRESS__ + data.url
+  console.log(`mainprocess handle get: ${data.url}`)
+  return new Promise((resolve) => {
+    axios({
+      method: "GET",
+      ...data,
+    }).then((res) => {
+      resolve(res.data)
+    })  
+  })
+})
+ipcMain.handle("post", (event, data) => {
+  console.log("mainprocess handle get:")
+  return axios({
+    method: "POST",
+    ...data,
+    url: __SERVER_ADDRESS__ + '' + data.url
+  })
+})

@@ -17,6 +17,12 @@ contextBridge.exposeInMainWorld('api', {
   },
   invoke: (channel, data) => {
     return ipcRenderer.invoke(channel, data)
+  },
+  get: (url, data) => {
+    return ipcRenderer.invoke("get", Object.assign({url}, data))
+  },
+  post: (url, data) => {
+    return ipcRenderer.invoke("post", Object.assign({url}, data))
   }
 })
   
