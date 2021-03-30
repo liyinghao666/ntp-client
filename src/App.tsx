@@ -1,32 +1,95 @@
-import React, { useEffect } from 'react';
-import './App.less';
-import { useSelector, RootStateOrAny } from "react-redux"
+import React, { useCallback, useEffect, useState } from 'react'
+import { Layout, Menu } from "antd"
+import { useSelector } from "react-redux"
+import { orange } from "@ant-design/colors"
+import * as antIcons from "@ant-design/icons"
+import { usedIconNames } from './antd'
+
+import pages from "./page"
+
+
+interface SiderConfig {
+  title: string,
+  icon: usedIconNames,
+  key: string
+}
+const siderConfig: SiderConfig[] = require("./application.json").sider
 
 function App() {
-  useEffect(() => {
-    window.api.get("/api/test").then((res: any) => console.log(res))
+  const [siderCollapsed, setSiderCollapsed] = useState(true)
+  const [menuSelected, setMenuSelected] = useState(siderConfig[0].key)
+
+  const handleMouseEnterSider = useCallback(() => {
+    setSiderCollapsed(false)
   }, [])
-  const test = useSelector((state: RootStateOrAny) => state.test.get("test"))
+  const handleMouseLeaveSider = useCallback(() => {
+    setSiderCollapsed(true)
+  }, [])
+  const handleMenuClick = useCallback((obj: any) => {
+    setMenuSelected(obj.key)
+  }, [])
+
+  useEffect(() => {
+
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Layout 
+      style={{
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        flex: 1
+      }}
+    >
+      <Layout.Sider
+        width={150}
+        breakpoint="sm"
+        collapsed={siderCollapsed}
+        trigger={null}
+        theme="light"
+        onMouseEnter={handleMouseEnterSider}
+        onMouseLeave={handleMouseLeaveSider}
+        style={{
+          height: "100vh",
+          left: 0,
+          top: 0
+        }}
+      >
+        <Menu
+          onClick={handleMenuClick}
+          selectedKeys={[menuSelected]}
+          style={{
+            border: "none"
+          }}
         >
-          Learn React and Electron
-        </a>
-        <a href="a">
-          {test}
-        </a>
-      </header>
-    </div>
-  );
+          {
+            siderConfig.map((sider) => {
+              return (
+                <Menu.Item 
+                  icon={React.createElement(antIcons[sider.icon])}
+                  key={sider.key}
+                >
+                  {sider.title}
+                </Menu.Item>
+              )
+            })
+          }
+        </Menu>
+      </Layout.Sider>
+      <Layout
+        style={{
+          height: "100vh",
+          padding: 10,
+          backgroundColor: orange[0]
+        }}
+      >
+        {
+          React.createElement(pages[menuSelected])
+        }
+      </Layout>
+    </Layout>
+  )
 }
 
 export default App;

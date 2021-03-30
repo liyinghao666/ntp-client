@@ -150,10 +150,11 @@ module.exports = function (webpackEnv) {
           },
         },
         {
-          loader: require.resolve(preProcessor),
-          options: {
+          loader: require.resolve(preProcessor.loader ? preProcessor.loader : preProcessor),
+          options: Object.assign({
             sourceMap: true,
-          },
+            javascriptEnabled: true
+          }, preProcessor.options),
         }
       );
     }
@@ -546,7 +547,16 @@ module.exports = function (webpackEnv) {
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
                 },
-                'less-loader'
+                {
+                  loader: 'less-loader', // compiles Less to CSS
+                  options: {
+                    modifyVars: {
+                      'primary-color': '#fa8c16',
+                      'link-color': '#1DA57A',
+                      'border-radius-base': '2px',
+                    },
+                  },
+                }
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.

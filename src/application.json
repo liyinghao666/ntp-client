@@ -1,0 +1,15 @@
+{
+  "sider": [{
+    "title": "test1",
+    "icon": "Html5Outlined",
+    "key": "Ntpcs"
+  },{
+    "title": "test2",
+    "icon": "Html5Outlined",
+    "key": "Ntpcs"
+  },{
+    "title": "test3",
+    "icon": "Html5Outlined",
+    "key": "Ntpcs"
+  }]
+}
