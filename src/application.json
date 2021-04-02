@@ -1,15 +1,15 @@
 {
   "sider": [{
-    "title": "test1",
+    "title": "C/S 模式",
     "icon": "Html5Outlined",
     "key": "Ntpcs"
   },{
-    "title": "test2",
-    "icon": "Html5Outlined",
-    "key": "Ntpcs"
+    "title": "广播模式",
+    "icon": "WifiOutlined",
+    "key": "NtpBroadcast"
   },{
-    "title": "test3",
-    "icon": "Html5Outlined",
-    "key": "Ntpcs"
+    "title": "设置",
+    "icon": "SettingOutlined",
+    "key": "Setting"
   }]
 }

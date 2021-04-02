@@ -1,11 +1,16 @@
 import { createStore, combineReducers } from "redux"
 import { Map } from "immutable"
-import { TEST } from "../action"
+import { CONFIG } from "../action"
 const store = createStore(combineReducers({
-  test: (state = Map({}), action) => {
+  config: (state: Map<string, string> = Map({
+    serverAddress: "",
+    serverPort: "",
+    originAddress: "",
+    receivePort: ""
+  }), action) => {
     switch(action.type) {
-      case TEST:
-        return state.set("test", "test")
+      case CONFIG:
+        return Map(action.payload)
       default:
         return state
     }

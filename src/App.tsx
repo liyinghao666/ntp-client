@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Layout, Menu } from "antd"
-import { useSelector } from "react-redux"
 import { orange } from "@ant-design/colors"
 import * as antIcons from "@ant-design/icons"
 import { usedIconNames } from './antd'
