@@ -2,9 +2,11 @@ const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const axios = require("axios").default
+const ntpCS = require("./ntp-clientserver")
 
 const __DEV__ = process.env.NODE_ENV === 'development'
 const __SERVER_ADDRESS__ = process.env.SERVER_ADDRESS ? process.env.SERVER_ADDRESS : "http://127.0.0.1:3000"
+const __APP_PATH__ = app.getAppPath()
 
 let mainWindow = null
 function createWindow() {
@@ -20,6 +22,7 @@ function createWindow() {
   mainWindow.webContents.openDevTools()
   if(__DEV__) {
     console.log("runing in DEVELOPMENT process!")
+    console.log(`APP is now in path ${__APP_PATH__}`)
     mainWindow.loadURL('http://localhost:3000')
   } else {
     console.log("runing in PRODUCTION process!")
@@ -61,4 +64,20 @@ ipcMain.handle("post", (event, data) => {
     ...data,
     url: __SERVER_ADDRESS__ + '' + data.url
   })
+})
+ipcMain.handle("save", (event, data) => {
+  console.log("save to localstorage")
+  return new Promise((resolve, reject) => {
+    fs.writeFile(path.join(__APP_PATH__, "storage.json"), JSON.stringify(data), (err) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve("success")
+      }
+    })
+  })
+})
+ipcMain.handle("ntpcs", (event, serverUrl) => {
+  console.log("ntpcs called:" + serverUrl)
+  return ntpCS(serverUrl)
 })

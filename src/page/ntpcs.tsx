@@ -1,7 +1,20 @@
 import React from 'react'
 import BlockWrapper from "../component/BlockWrapper"
 import { Descriptions, Button } from 'antd'
+import { useSelector } from 'react-redux'
 function Ntpcs() {
+  const serverUrl = useSelector(store => {
+    const serverAddress = store.config.get("serverAddress")
+    const serverPort =  store.config.get("serverPort")
+    if(serverAddress && serverPort) {
+      return serverAddress + ':' + serverPort
+    } else return ''
+  })
+
+  const handleClick = () => {
+    window.api.ntpcs(serverUrl).then(console.log) 
+  }
+
   return (
     <BlockWrapper
       style={{
@@ -44,6 +57,7 @@ function Ntpcs() {
       </Descriptions>
       <Button 
         type="primary"
+        onClick={handleClick}
         style={{
           marginTop: 50,
           alignSelf: "start"

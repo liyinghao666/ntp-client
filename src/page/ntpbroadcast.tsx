@@ -1,15 +1,49 @@
-import React from 'react'
-import { List } from "antd"
+import React, { CSSProperties, JSXElementConstructor, useCallback, useEffect, useRef, useState } from 'react'
+import { List, Button } from "antd"
+// import { subscribe, desubscribe, begin, end } from "../electron/ntp-broadcast"
 import BlockWrapper from "../component/BlockWrapper"
+interface BroadcastMessage {
+  time: string,
+  key: number
+}
 function NtpBroadcast() {
+  const [listening, setListening] = useState(false)
+  const [dataList, setDataList] = useState<BroadcastMessage[]>([])
+
+  // const handleClick = useCallback(() => {
+  //   setListening(listening => {
+  //     if(listening) {
+  //       end()
+  //       return false
+  //     } else {
+  //       begin()
+  //       return true
+  //     }
+  //   })
+  // }, [])
+
+  // useEffect(() => {
+  //   subscribe((message: string) => {
+  //     setDataList((dataList) => [{ time: message, key: Math.random() * 1000 }, ...dataList])
+  //   })
+  // }, [])
   return (
-    <BlockWrapper>
+    <BlockWrapper
+      style={{
+        // overflow: "hidden"
+      }}
+    >
       <List
         bordered={true}
-        header={<div>广播接收列表</div>}
-        dataSource={['aaa', 'bbb', 'bbb', 'bbb', 'bbb', 'bbb', 'bbb', 'bbb', 'bbb', 'bbb', 'bbb', 'bbb', 'bbb', 'bbb']}
+        header={
+          <Button
+            type="primary"
+            // onClick={handleClick}
+          >开始监听广播</Button>
+        }
+        dataSource={dataList}
         renderItem={item => {
-          return <List.Item>{item}</List.Item>
+          return <List.Item key={item.key}>{item.time}</List.Item>
         }}
       ></List>
     </BlockWrapper>

@@ -20,12 +20,19 @@ udpServer.on("message", (msg) => {
   d.setUTCFullYear(d.getUTCFullYear() - 70)
   listenerArray.map(listener => listener(d))
 })
-udpServer.bind(123)
+function begin() {
+  udpServer.bind(123)
+}
+function end() {
+  udpServer.close()
+}
 module.exports = {
   subscribe: function(listener) {
     listenerArray.push(listener)
   },
   desubscribe: function(listener) {
     listenerArray.splice(listenerArray.indexOf(listener), 1)
-  }
+  },
+  begin,
+  end
 }

@@ -66,7 +66,10 @@ let ntpPackage = [
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-module.exports =  function ntpCS() {
+module.exports =  function ntpCS(serverUrl) {
+  const matchResult = serverUrl.match(/([\b\d.]+)(:(\d+))?/)
+  const serverAddress = matchResult ? matchResult[1] : null
+  const serverPort = parseInt(matchResult ? matchResult[3] : null)
   return Promise.race([
     new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -95,7 +98,7 @@ module.exports =  function ntpCS() {
           state: "success",
           data: d
         })
-        udpClient.close()
+        // udpClient.close()
       })
       udpClient.send(Buffer.from(ntpPackage), 0, ntpPackage.length, 123, SERVER_ALI, (err, bytes) => {
         if(err) {

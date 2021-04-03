@@ -23,6 +23,12 @@ contextBridge.exposeInMainWorld('api', {
   },
   post: (url, data) => {
     return ipcRenderer.invoke("post", Object.assign({url}, data))
+  },
+  save: (data) => {
+    return ipcRenderer.invoke("save", data)
+  },
+  ntpcs: (data) => {
+    return ipcRenderer.invoke("ntpcs", data)
   }
 })
   

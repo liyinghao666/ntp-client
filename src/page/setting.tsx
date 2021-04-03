@@ -12,7 +12,6 @@ const addressReg = /^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|((https?:\
 const portReg = /^[0-9]{1,5}$/
 
 function Setting() {
-  console.log("setting component rerendered")
   const store = useStore()
 
   const [serverAddressValid, setServerAddressValid] = useState(false)
