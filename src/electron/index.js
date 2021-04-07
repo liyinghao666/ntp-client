@@ -3,6 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const axios = require("axios").default
 const ntpCS = require("./ntp-clientserver")
+const { begin, end, subscribe } = require("./ntp-broadcast")
 
 const __DEV__ = process.env.NODE_ENV === 'development'
 const __SERVER_ADDRESS__ = process.env.SERVER_ADDRESS ? process.env.SERVER_ADDRESS : "http://127.0.0.1:3000"
@@ -80,4 +81,13 @@ ipcMain.handle("save", (event, data) => {
 ipcMain.handle("ntpcs", (event, serverUrl) => {
   console.log("ntpcs called:" + serverUrl)
   return ntpCS(serverUrl)
+})
+ipcMain.on("ntpbroadcast begin", () => {
+  begin()
+})
+ipcMain.on("ntpbroadcast end", () => {
+  end()
+})
+subscribe((d) => {
+  mainWindow.webContents.send("ntpbroadcast message", d)
 })

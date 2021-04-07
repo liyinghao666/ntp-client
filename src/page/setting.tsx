@@ -1,64 +1,88 @@
-import React, { FunctionComponent, useCallback, useMemo, useRef, useState } from 'react'
+import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useStore } from "react-redux"
-import { Form, Button, AutoComplete, AutoCompleteProps, Divider } from 'antd'
-import styleHelper from "../utils/styleHelper"
+import { Form, Button, Input, Divider } from 'antd'
 import BlockWrapper from "../component/BlockWrapper"
 
-const AutoCompleteWithStyle: FunctionComponent<AutoCompleteProps> = styleHelper(AutoComplete, {
-  border: "none"
-})
-
-const addressReg = /^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|((https?:\/\/)?www\.([\s\S]+\.)+(com|cn|top|edu)(:[0-9]{1,5})?)$/
+const addressReg = /^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|((https?:\/\/)?www\.([\S]+\.)+(com|cn|top|edu)(:[0-9]{1,5})?)$/
 const portReg = /^[0-9]{1,5}$/
 
 function Setting() {
   const store = useStore()
+  const config = store.getState().config
+  const dispatch = useDispatch()
 
   const [serverAddressValid, setServerAddressValid] = useState(false)
   const [serverPortValid, setServerPortValid] = useState(false)
   const [originAddressValid, setOriginAddressValid] = useState(false)
   const [receivePortValid, setReceivePortValid] = useState(false)
+
+  const [serverAddress, setServerAddress] = useState(config.get("serverAddress"))
+  const [serverPort, setServerPort] = useState(config.get("serverPort"))
+  const [originAddress, setOriginAddress] = useState(config.get("originAddress"))
+  const [receivePort, setReceivePort] = useState(config.get("receivePort"))
+
   const [feedBack, setFeedBack] = useState(false)
 
-  let formData = useRef({
-    serverAddress: "",
-    serverPort: "",
-    originAddress: "",
-    receivePort: ""
-  })
-
-
-  const dispatch = useDispatch()
-
   const isValid = useCallback(() => {
+    setServerAddressValid(addressReg.test(serverAddress? serverAddress.trim() : ''))
+    setServerPortValid(portReg.test(serverPort? serverPort.trim() : ''))
+    setOriginAddressValid(addressReg.test(originAddress? originAddress.trim() : ''))
+    setReceivePortValid(portReg.test(receivePort? receivePort.trim() : ''))
+
     return serverAddressValid &&
     serverPortValid &&
     originAddressValid &&
     receivePortValid
-  }, [serverAddressValid, serverPortValid, originAddressValid, receivePortValid])
+  }, [
+    serverAddressValid, 
+    serverPortValid, 
+    originAddressValid, 
+    receivePortValid,
+    serverAddress,
+    serverPort,
+    originAddress,
+    receivePort
+  ])
 
-  const handleServerAddressChange = useCallback((str: string) => {
+
+  const handleServerAddressChange = useCallback((e) => {
+    const str = e.target.value
     setServerAddressValid(addressReg.test(str.trim()))
-    formData.current.serverAddress = str.trim()
+    setServerAddress(str.trim())
   }, [])
-  const handleServerPortChange = useCallback((str: string) => {
+  const handleServerPortChange = useCallback((e) => {
+    const str = e.target.value
     setServerPortValid(portReg.test(str.trim()))
-    formData.current.serverPort = str.trim()
+    setServerPort(str.trim())
   }, [])
-  const handleOriginChange = useCallback((str: string) => {
+  const handleOriginChange = useCallback((e) => {
+    const str = e.target.value
     setOriginAddressValid(addressReg.test(str.trim()))
-    formData.current.originAddress = str.trim()
+    setOriginAddress(str.trim())
   }, [])
-  const handleReceivePortChange = useCallback((str: string) => {
+  const handleReceivePortChange = useCallback((e) => {
+    const str = e.target.value
     setReceivePortValid(portReg.test(str.trim()))
-    formData.current.receivePort = str.trim()
+    setReceivePort(str.trim())
   }, [])
   const handleSubmit = useCallback(() => {
     if(isValid()) {
-      dispatch(createSettingConfigAction(formData.current))
+      dispatch(createSettingConfigAction({
+        serverAddress,
+        serverPort,
+        originAddress,
+        receivePort
+      }))
       setFeedBack(true)
     }
-  }, [dispatch, isValid])
+  }, [
+    serverAddress,
+    serverPort,
+    originAddress,
+    receivePort,
+    dispatch,
+    isValid
+  ])
 
 
   const createSettingConfigAction = ({
@@ -80,17 +104,9 @@ function Setting() {
     }
   }
 
-  formData.current = useMemo(() => {
-    const formMap = {
-      serverAddress: "", 
-      serverPort: "", 
-      originAddress: "", 
-      receivePort: ""
-    }
-    store.getState().config.map((value, key) => formMap[key] = value)
-    return formMap
-  }, [store])
-
+  useEffect(() => {
+    isValid()
+  }, [isValid])
 
   return (
     <BlockWrapper>
@@ -101,25 +117,23 @@ function Setting() {
           </Divider>
           <Form.Item
             label="服务器地址"
-            name="serverAddress"
             validateStatus={serverAddressValid ? "success" : "error"}
             hasFeedback={feedBack}
-            initialValue={formData.current.serverAddress}
           >
-            <AutoCompleteWithStyle
+            <Input
               onChange={handleServerAddressChange}
-            ></AutoCompleteWithStyle>
+              value={serverAddress}
+            ></Input>
           </Form.Item>
           <Form.Item
             label="服务器端口"
-            name="serverPort"
             validateStatus={serverPortValid ? "success" : "error"}
             hasFeedback={feedBack}
-            initialValue={formData.current.serverPort}
           >
-            <AutoCompleteWithStyle
+            <Input
               onChange={handleServerPortChange}
-            ></AutoCompleteWithStyle>
+              value={serverPort}
+            ></Input>
           </Form.Item>
         </div>
         <div>
@@ -128,25 +142,23 @@ function Setting() {
           </Divider>
           <Form.Item
             label="广播来源地址"
-            name="originAddress"
             validateStatus={originAddressValid ? "success" : "error"}
             hasFeedback={feedBack}
-            initialValue={formData.current.originAddress}
           >
-            <AutoCompleteWithStyle
+            <Input
               onChange={handleOriginChange}
-            ></AutoCompleteWithStyle>
+              value={originAddress}
+            ></Input>
           </Form.Item>
           <Form.Item
             label="指定接收端口"
-            name="receivePort"
             validateStatus={receivePortValid ? "success" : "error"}
             hasFeedback={feedBack}
-            initialValue={formData.current.receivePort}
           >
-            <AutoCompleteWithStyle
+            <Input
               onChange={handleReceivePortChange}
-            ></AutoCompleteWithStyle>
+              value={receivePort}
+            ></Input>
           </Form.Item>
         </div>
         <Button

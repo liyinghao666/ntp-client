@@ -29,6 +29,13 @@ contextBridge.exposeInMainWorld('api', {
   },
   ntpcs: (data) => {
     return ipcRenderer.invoke("ntpcs", data)
+  },
+  ntpbroadcast: {
+    begin: () => ipcRenderer.send("ntpbroadcast begin"),
+    end: () => ipcRenderer.send("ntpbroadcast end"),
+    subscribe: (callback) => {
+      ipcRenderer.on("ntpbroadcast message", callback)
+    }
   }
 })
   

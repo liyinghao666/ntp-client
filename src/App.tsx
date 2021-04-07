@@ -6,7 +6,6 @@ import { usedIconNames } from './antd'
 
 import pages from "./page"
 
-
 interface SiderConfig {
   title: string,
   icon: usedIconNames,

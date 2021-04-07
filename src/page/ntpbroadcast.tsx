@@ -1,6 +1,5 @@
 import React, { CSSProperties, JSXElementConstructor, useCallback, useEffect, useRef, useState } from 'react'
 import { List, Button } from "antd"
-// import { subscribe, desubscribe, begin, end } from "../electron/ntp-broadcast"
 import BlockWrapper from "../component/BlockWrapper"
 interface BroadcastMessage {
   time: string,
@@ -10,27 +9,27 @@ function NtpBroadcast() {
   const [listening, setListening] = useState(false)
   const [dataList, setDataList] = useState<BroadcastMessage[]>([])
 
-  // const handleClick = useCallback(() => {
-  //   setListening(listening => {
-  //     if(listening) {
-  //       end()
-  //       return false
-  //     } else {
-  //       begin()
-  //       return true
-  //     }
-  //   })
-  // }, [])
+  const handleClick = useCallback(() => {
+    setListening(listening => {
+      if(listening) {
+        window.api.ntpbroadcast.end()
+        return false
+      } else {
+        window.api.ntpbroadcast.begin()
+        return true
+      }
+    })
+  }, [])
 
-  // useEffect(() => {
-  //   subscribe((message: string) => {
-  //     setDataList((dataList) => [{ time: message, key: Math.random() * 1000 }, ...dataList])
-  //   })
-  // }, [])
+  useEffect(() => {
+    window.api.ntpbroadcast.subscribe((message: string) => {
+      setDataList((dataList) => [{ time: message, key: Math.random() * 1000 }, ...dataList])
+    })
+  }, [])
   return (
     <BlockWrapper
       style={{
-        // overflow: "hidden"
+        overflow: "hidden"
       }}
     >
       <List
@@ -38,7 +37,7 @@ function NtpBroadcast() {
         header={
           <Button
             type="primary"
-            // onClick={handleClick}
+            onClick={handleClick}
           >开始监听广播</Button>
         }
         dataSource={dataList}

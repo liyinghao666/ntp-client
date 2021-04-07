@@ -11,5 +11,11 @@
     "title": "设置",
     "icon": "SettingOutlined",
     "key": "Setting"
-  }]
+  }],
+  "storeConfig": {
+    "serverAddress": "https://www.test.com",
+    "serverPort": "123",
+    "originAddress": "https://www.test.com",
+    "receivePort": "123"
+  }
 }
