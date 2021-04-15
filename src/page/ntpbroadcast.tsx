@@ -1,4 +1,4 @@
-import React, { CSSProperties, JSXElementConstructor, useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { List, Button } from "antd"
 import BlockWrapper from "../component/BlockWrapper"
 interface BroadcastMessage {
@@ -17,11 +17,9 @@ function NtpBroadcast() {
   const handleClick = useCallback(() => {
     setListening(listening => {
       if(listening) {
-        console.log("desubscribe")
         window.api.ntpbroadcast.desubscribe()
         return false
       } else {
-        console.log("subscribe")
         window.api.ntpbroadcast.subscribe(bindFunction)
         return true
       }
@@ -30,7 +28,6 @@ function NtpBroadcast() {
 
   useEffect(() => {
     return () => {
-      console.log("desubscribe")
       window.api.ntpbroadcast.desubscribe()
     }
   }, [])
