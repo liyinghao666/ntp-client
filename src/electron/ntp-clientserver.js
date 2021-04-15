@@ -65,8 +65,10 @@ let ntpPackage = [
 // |                                                               |
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-
-module.exports =  function ntpCS() {
+module.exports =  function ntpCS(serverUrl) {
+  const matchResult = serverUrl.match(/([\b\d.]+)(:(\d+))?/)
+  const serverAddress = matchResult ? matchResult[1] : null
+  const serverPort = parseInt(matchResult ? matchResult[3] : null)
   return Promise.race([
     new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -86,16 +88,30 @@ module.exports =  function ntpCS() {
             console.log(Buffer.from(result.slice(i, i + 4)))
           }
         }
-        let seconds = (((result[40] * 256) + result[41]) * 256 + result[42]) * 256 + result[43]
-        let d = new Date()
-        d.setTime(0)
-        d.setUTCSeconds(seconds + 8*60*60)
-        d.setUTCFullYear(d.getUTCFullYear() - 70)
+        let receiveSeconds = (((result[32] * 256) + result[33]) * 256 + result[34]) * 256 + result[35]
+        let receiveMicrosecond = ((((result[36] * 256) + result[37]) * 256 + result[38]) * 256 + result[39]) / 4294.967296
+        let receiveMs = receiveMicrosecond / 1000
+        let receiveTime = new Date()
+        receiveTime.setTime(0)
+        receiveTime.setUTCSeconds(receiveSeconds)
+        receiveTime.setUTCFullYear(receiveTime.getUTCFullYear() - 70)
+        receiveTime.setUTCMilliseconds(receiveMs)
+
+        let backSeconds = (((result[40] * 256) + result[41]) * 256 + result[42]) * 256 + result[43]
+        let backMicrosecond = ((((result[44] * 256) + result[45]) * 256 + result[46]) * 256 + result[47]) / 4294.967296
+        let backMs = backMicrosecond / 1000
+        let backTime = new Date()
+        backTime.setTime(0)
+        backTime.setUTCSeconds(backSeconds)
+        backTime.setUTCFullYear(backTime.getUTCFullYear() - 70)
+        backTime.setUTCMilliseconds(backMs)
+        
         resolve({
           state: "success",
-          data: d
+          receiveTime,
+          backTime
         })
-        udpClient.close()
+        // udpClient.close()
       })
       udpClient.send(Buffer.from(ntpPackage), 0, ntpPackage.length, 123, SERVER_ALI, (err, bytes) => {
         if(err) {

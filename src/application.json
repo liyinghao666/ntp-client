@@ -1,0 +1,21 @@
+{
+  "sider": [{
+    "title": "C/S 模式",
+    "icon": "Html5Outlined",
+    "key": "Ntpcs"
+  },{
+    "title": "广播模式",
+    "icon": "WifiOutlined",
+    "key": "NtpBroadcast"
+  },{
+    "title": "设置",
+    "icon": "SettingOutlined",
+    "key": "Setting"
+  }],
+  "storeConfig": {
+    "serverAddress": "https://www.test.com",
+    "serverPort": "123",
+    "originAddress": "https://www.test.com",
+    "receivePort": "123"
+  }
+}
