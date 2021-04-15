@@ -12,7 +12,8 @@ declare global {
       ntpbroadcast: {
         begin: function,
         end: function,
-        subscribe: function
+        subscribe: function,
+        desubscribe: function
       }
     }
   }

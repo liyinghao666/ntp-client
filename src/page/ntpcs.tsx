@@ -1,8 +1,20 @@
-import React from 'react'
+/**
+ * todo: 添加 “每秒发送” 或类似功能
+ * todo: 修改系统时间：https://stackoverflow.com/questions/58138661/change-system-os-time-with-nodejs
+ */
+import React, { useState } from 'react'
 import BlockWrapper from "../component/BlockWrapper"
 import { Descriptions, Button } from 'antd'
 import { useSelector } from 'react-redux'
+interface NTPCSData {
+  receiveTime: Date,
+  backTime: Date,
+  state: string
+}
 function Ntpcs() {
+  const [sendTime, setSendTime] = useState(new Date())
+  const [receiveTime, setReceiveTime] = useState(new Date())
+  const [backTime, setBackTime] = useState(new Date())
   const serverUrl = useSelector(store => {
     const serverAddress = store.config.get("serverAddress")
     const serverPort =  store.config.get("serverPort")
@@ -12,17 +24,16 @@ function Ntpcs() {
   })
 
   const handleClick = () => {
-    window.api.ntpcs(serverUrl).then(console.log) 
+    const clickTime = new Date()
+    window.api.ntpcs(serverUrl).then((data: NTPCSData) => {
+      setSendTime(clickTime)
+      setReceiveTime(data.receiveTime)
+      setBackTime(data.backTime)
+    }) 
   }
 
   return (
-    <BlockWrapper
-      style={{
-        width: "100%",
-        height: "100%",
-        padding: "30px 100px"
-      }}
-    >
+    <BlockWrapper>
       <Descriptions
         title="发送帧"
         bordered={true}
@@ -33,7 +44,7 @@ function Ntpcs() {
           label="发送时刻"
           span={3}
         >
-          2020年0月0日0时0分0秒
+          {sendTime.toString()}:{sendTime.getMilliseconds()}
         </Descriptions.Item>
       </Descriptions>
       <Descriptions
@@ -46,13 +57,13 @@ function Ntpcs() {
           label="接收时刻"
           span={3}
         >
-          2020年0月0日0时0分0秒
+          {receiveTime.toString()}:{receiveTime.getMilliseconds()}
         </Descriptions.Item>
         <Descriptions.Item
           label="回送时刻"
           span={3}
         >
-          2020年0月0日0时0分0秒
+          {backTime.toString()}:{backTime.getMilliseconds()}
         </Descriptions.Item>
       </Descriptions>
       <Button 

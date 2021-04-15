@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Layout, Menu } from "antd"
 import { orange } from "@ant-design/colors"
-import * as antIcons from "@ant-design/icons"
+import * as antIcons from "@ant-design/icons"  // 这里可以写一个 loader 处理一下，把 * 替换成 { application.json } 里面的注册组件
 import { usedIconNames } from './antd'
 
 import pages from "./page"
@@ -28,7 +28,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-
+    window.api.ntpbroadcast.begin()
   }, [])
 
   return (
@@ -78,7 +78,6 @@ function App() {
       <Layout
         style={{
           height: "100vh",
-          padding: 10,
           backgroundColor: orange[0]
         }}
       >
