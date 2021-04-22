@@ -15,12 +15,11 @@ function NtpBroadcast() {
   }, [])
 
   const handleClick = useCallback(() => {
+    window.api.ntpbroadcast.subscribe(bindFunction)
     setListening(listening => {
       if(listening) {
-        window.api.ntpbroadcast.desubscribe()
         return false
       } else {
-        window.api.ntpbroadcast.subscribe(bindFunction)
         return true
       }
     })
@@ -30,7 +29,7 @@ function NtpBroadcast() {
     return () => {
       window.api.ntpbroadcast.desubscribe()
     }
-  }, [])
+  }, [bindFunction])
 
   return (
     <BlockWrapper
@@ -44,7 +43,8 @@ function NtpBroadcast() {
           <Button
             type="primary"
             onClick={handleClick}
-          >{listening ? "停止" : "开始"}监听广播</Button>
+            disabled={listening}
+          >开始监听广播</Button>
         }
         dataSource={[...dataList].reverse()}
         renderItem={item => {

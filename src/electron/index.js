@@ -89,5 +89,6 @@ ipcMain.on("ntpbroadcast end", () => {
   end()
 })
 subscribe((d) => {
+  console.log("main process 发送广播信息")
   mainWindow.webContents.send("ntpbroadcast message", d)
 })
