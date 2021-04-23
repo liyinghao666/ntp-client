@@ -145,7 +145,7 @@ checkBrowsers(paths.appPath, isInteractive)
       console.log(chalk.cyan('Starting the development server...\n'));
       // openBrowser(urls.localUrlForBrowser);
       let electronPath = path.join(__dirname, "../src/electron/index.js")
-      crossEnv(["NODE_ENV=development", "electron", electronPath])
+      crossEnv(["NODE_ENV=development", "electron", electronPath, "--no-sandbox"])
     });
 
     ['SIGINT', 'SIGTERM'].forEach(function (sig) {
