@@ -9,6 +9,10 @@ const __DEV__ = process.env.NODE_ENV === 'development'
 const __SERVER_ADDRESS__ = process.env.SERVER_ADDRESS ? process.env.SERVER_ADDRESS : "http://127.0.0.1:3000"
 const __APP_PATH__ = app.getAppPath()
 
+let currentServerAddress,
+    currentServerPort,
+    currentOririnAddress,
+    currentOriginPort
 let mainWindow = null
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -80,13 +84,18 @@ ipcMain.handle("save", (event, data) => {
 })
 ipcMain.handle("ntpcs", (event, serverUrl) => {
   console.log("ntpcs called:" + serverUrl)
-  return ntpCS(serverUrl)
+  return ntpCS(currentServerAddress, currentServerPort)
 })
 ipcMain.on("ntpbroadcast begin", () => {
   begin()
 })
 ipcMain.on("ntpbroadcast end", () => {
   end()
+})
+ipcMain.on("config", (event, data) => {
+  console.log(data)
+  currentServerAddress = data.serverAddress
+  currentServerPort = data.serverPort
 })
 subscribe((d) => {
   console.log("main process 发送广播信息")

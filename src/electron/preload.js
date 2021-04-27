@@ -39,6 +39,9 @@ contextBridge.exposeInMainWorld('api', {
     desubscribe: (callback) => {
       ipcRenderer.removeAllListeners("ntpbroadcast message")
     }
+  },
+  config: action => {
+    ipcRenderer.send("config", action.payload)
   }
 })
   
