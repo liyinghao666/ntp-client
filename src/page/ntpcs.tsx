@@ -1,7 +1,3 @@
-/**
- * todo: 添加 “每秒发送” 或类似功能
- * todo: 修改系统时间：https://stackoverflow.com/questions/58138661/change-system-os-time-with-nodejs
- */
 import React, { useState } from 'react'
 import BlockWrapper from "../component/BlockWrapper"
 import { Descriptions, Button } from 'antd'

@@ -1,4 +1,5 @@
 import { DefaultRootState } from "react-redux"
+import { configAction } from "../page/setting"
 
 // 由于在electron中使用了contextBridge来给window对象注入方法
 declare global {
@@ -14,7 +15,8 @@ declare global {
         end: function,
         subscribe: function,
         desubscribe: function
-      }
+      },
+      config: (action: configAction) => void
     }
   }
 }
