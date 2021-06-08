@@ -92,11 +92,11 @@
     "workbox-webpack-plugin": "5.1.4"
   },
   "scripts": {
-    "start": "electron-forge start",
+    "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "package": "electron-packager ./ myapp --out ./OutApp --platform linux --architecture x64 --overwrite"
   },
   "eslintConfig": {
     "extends": [
@@ -179,7 +179,9 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
-    "electron": "12.0.6"
+    "electron": "12.0.6",
+    "electron-builder": "^22.10.5",
+    "electron-packager": "^15.2.0"
   },
   "config": {
     "forge": {

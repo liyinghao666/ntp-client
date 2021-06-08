@@ -30,7 +30,7 @@ function begin() {
   })
   
   try {
-    udpServer.bind(12345)
+    udpServer.bind(123)
   } catch (e) {
     console.log(e)
   }

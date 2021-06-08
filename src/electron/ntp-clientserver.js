@@ -4,8 +4,9 @@
 const SERVER_ALI = "120.25.115.20"
 const dgram = require("dgram")
 let udpClient = dgram.createSocket("udp4")
+const { setTime } = require("../utils/setSystemTime")
 let ntpPackage = [
-  0x1B, 0x00, 0x00, 0x00,
+  0x23, 0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00,
@@ -100,7 +101,7 @@ module.exports =  function ntpCS(serverAddress = SERVER_ALI, serverPort = 123) {
           receiveTime.setUTCSeconds(receiveSeconds)
           receiveTime.setUTCFullYear(receiveTime.getUTCFullYear() - 70)
           receiveTime.setUTCMilliseconds(receiveMs)
-  
+
           let backSeconds = (((result[40] * 256) + result[41]) * 256 + result[42]) * 256 + result[43]
           let backMicrosecond = ((((result[44] * 256) + result[45]) * 256 + result[46]) * 256 + result[47]) / 4294.967296
           let backMs = backMicrosecond / 1000
@@ -109,7 +110,7 @@ module.exports =  function ntpCS(serverAddress = SERVER_ALI, serverPort = 123) {
           backTime.setUTCSeconds(backSeconds)
           backTime.setUTCFullYear(backTime.getUTCFullYear() - 70)
           backTime.setUTCMilliseconds(backMs)
-          
+          setTime(receiveTime)
           resolve({
             state: "success",
             receiveTime,

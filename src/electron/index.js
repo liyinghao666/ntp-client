@@ -24,24 +24,17 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js')
     }
   })
-  mainWindow.webContents.openDevTools()
-  if(__DEV__) {
-    console.log("runing in DEVELOPMENT process!")
-    console.log(`APP is now in path ${__APP_PATH__}`)
-    mainWindow.loadURL('http://localhost:3000')
-  } else {
-    console.log("runing in PRODUCTION process!")
-    mainWindow.loadURL(path.join(__dirname, "../../build/index.html"))
-  }
+  // if(__DEV__) {
+  //   console.log("runing in DEVELOPMENT process!")
+  //   console.log(`APP is now in path ${__APP_PATH__}`)
+  //   mainWindow.loadURL('http://localhost:3000')
+  // } else {
+  //   console.log("runing in PRODUCTION process!")
+  //   mainWindow.loadURL(path.join(__dirname, "../../build/index.html"))
+  // }
+  mainWindow.loadFile(path.resolve(__dirname, "../build/index.html"))
 }
 app.on('ready', createWindow)
-ipcMain.on('toMainProcess', (event, data) => {
-  console.log('main process receive:' + data)
-  const res = {
-    name: 'lyh'
-  }
-  mainWindow.webContents.send('toRendererProcess', res)
-})
 ipcMain.handle("invoke", (event, data) => new Promise((res, rej) => {
   console.log("mainprocess handle invoke:")
   console.log(data)

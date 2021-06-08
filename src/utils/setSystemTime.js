@@ -28,10 +28,10 @@ switch (platform()) {
 function setWindowsTime(date = new Date()) {
   // 在 windows 系统中，有两个命令可以分别查询日期和时间。他们是：date & time
   // 需要在 cmd 中运行脚本才可以访问到这两个命令(因为他们是 cmd 自带的脚本)
-  const year = date.getFullYear() -10
+  const year = date.getFullYear()
   const month = date.getMonth()
   const day = date.getDay()
-  const hour = date.getHours() - 10
+  const hour = date.getHours()
   const minute = date.getMinutes()
   const second = date.getSeconds()
   console.log("windows set")
@@ -55,7 +55,7 @@ function setLinuxTime(date) {
   const minute = date.getMinutes()
   const second = date.getSeconds()
   const timestamp = handleDate(date)
-  exec(`/bin/date --set="${20110101 11:11:11}"`, (err, stdout, stderr) => {
+  exec(`/bin/date --set="${year}${month}${day} ${hour}${minute}${second}"`, (err, stdout, stderr) => {
     if (err || stderr) {
       console.error(err)
       console.log(stderr)
@@ -72,5 +72,3 @@ function handleDate(date) {
   let timestamp = ''
   return timestamp
 }
-
-setWindowsTime()
