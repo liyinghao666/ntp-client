@@ -13,9 +13,9 @@
     "key": "Setting"
   }],
   "storeConfig": {
-    "serverAddress": "https://www.test.com",
+    "serverAddress": "120.25.115.20",
     "serverPort": "123",
-    "originAddress": "https://www.test.com",
+    "originAddress": "115.156.155.100",
     "receivePort": "123"
   }
 }

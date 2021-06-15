@@ -18,15 +18,15 @@ function begin() {
     //   }
     // }
     let seconds = (((result[40] * 256) + result[41]) * 256 + result[42]) * 256 + result[43]
-    let microsecond = ((((result[44] * 256) + result[45]) * 256 + result[46]) * 256 + result[47]) / 4294.967296
+    let microsecond = ((((result[44] * 256) + result[45]) * 256 + result[46]) * 256 + result[47]) / 4294.967296 + 1
     let millsecond = microsecond / 1000
     let d = new Date()
     d.setTime(0)
-    d.setUTCSeconds(seconds)
-    d.setUTCMilliseconds(millsecond)
-    d.setUTCFullYear(d.getUTCFullYear() - 70)
-    listener(new Date())
-    // listener(d)
+    d.setSeconds(seconds)
+    d.setMilliseconds(millsecond)
+    d.setFullYear(d.getUTCFullYear() - 70)
+    // listener(new Date())
+    listener(d)
   })
   
   try {

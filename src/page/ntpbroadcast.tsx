@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { List, Button } from "antd"
 import BlockWrapper from "../component/BlockWrapper"
+import timeString from "../utils/timeString"
 interface BroadcastMessage {
   time: string,
   key: number
@@ -11,16 +12,15 @@ function NtpBroadcast() {
   const [dataList, setDataList] = useState<BroadcastMessage[]>([])
 
   const bindFunction = useCallback((message: Date) => {
-    setDataList((dataList) => [{ time: message.toString() + ':' + message.getMilliseconds(), key: Math.random() * 1000 }, ...dataList].slice(0, maxItemsOnshow))
+    setDataList((dataList) => [{ time: timeString(message), key: Math.random() * 1000 }, ...dataList].slice(0, maxItemsOnshow))
   }, [])
 
   const handleClick = useCallback(() => {
+    window.api.ntpbroadcast.subscribe(bindFunction)
     setListening(listening => {
       if(listening) {
-        window.api.ntpbroadcast.desubscribe()
         return false
       } else {
-        window.api.ntpbroadcast.subscribe(bindFunction)
         return true
       }
     })
@@ -30,7 +30,7 @@ function NtpBroadcast() {
     return () => {
       window.api.ntpbroadcast.desubscribe()
     }
-  }, [])
+  }, [bindFunction])
 
   return (
     <BlockWrapper
@@ -44,7 +44,8 @@ function NtpBroadcast() {
           <Button
             type="primary"
             onClick={handleClick}
-          >{listening ? "停止" : "开始"}监听广播</Button>
+            disabled={listening}
+          >开始监听广播</Button>
         }
         dataSource={[...dataList].reverse()}
         renderItem={item => {

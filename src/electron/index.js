@@ -9,6 +9,10 @@ const __DEV__ = process.env.NODE_ENV === 'development'
 const __SERVER_ADDRESS__ = process.env.SERVER_ADDRESS ? process.env.SERVER_ADDRESS : "http://127.0.0.1:3000"
 const __APP_PATH__ = app.getAppPath()
 
+let currentServerAddress,
+    currentServerPort,
+    currentOririnAddress,
+    currentOriginPort
 let mainWindow = null
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -20,24 +24,26 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js')
     }
   })
-  mainWindow.webContents.openDevTools()
-  if(__DEV__) {
-    console.log("runing in DEVELOPMENT process!")
-    console.log(`APP is now in path ${__APP_PATH__}`)
-    mainWindow.loadURL('http://localhost:3000')
-  } else {
-    console.log("runing in PRODUCTION process!")
-    mainWindow.loadURL(path.join(__dirname, "../../build/index.html"))
-  }
+  // if(__DEV__) {
+  //   console.log("runing in DEVELOPMENT process!")
+  //   console.log(`APP is now in path ${__APP_PATH__}`)
+  //   mainWindow.loadURL('http://localhost:3000')
+  // } else {
+  //   console.log("runing in PRODUCTION process!")
+  //   mainWindow.loadURL(path.join(__dirname, "../../build/index.html"))
+  // }
+  mainWindow.loadFile(path.resolve(__dirname, "../build/index.html"))
+  subscribe((d) => {
+    console.log("main process 发送广播信息")
+    mainWindow.webContents.send("ntpbroadcast message", d)
+  })
+  mainWindow.addListener("close", (e) => {
+    console.log("will close")
+    subscribe(() => {})
+    e.returnValue = false
+  })
 }
 app.on('ready', createWindow)
-ipcMain.on('toMainProcess', (event, data) => {
-  console.log('main process receive:' + data)
-  const res = {
-    name: 'lyh'
-  }
-  mainWindow.webContents.send('toRendererProcess', res)
-})
 ipcMain.handle("invoke", (event, data) => new Promise((res, rej) => {
   console.log("mainprocess handle invoke:")
   console.log(data)
@@ -80,7 +86,7 @@ ipcMain.handle("save", (event, data) => {
 })
 ipcMain.handle("ntpcs", (event, serverUrl) => {
   console.log("ntpcs called:" + serverUrl)
-  return ntpCS(serverUrl)
+  return ntpCS(currentServerAddress, currentServerPort)
 })
 ipcMain.on("ntpbroadcast begin", () => {
   begin()
@@ -88,6 +94,8 @@ ipcMain.on("ntpbroadcast begin", () => {
 ipcMain.on("ntpbroadcast end", () => {
   end()
 })
-subscribe((d) => {
-  mainWindow.webContents.send("ntpbroadcast message", d)
+ipcMain.on("config", (event, data) => {
+  console.log(data)
+  currentServerAddress = data.serverAddress
+  currentServerPort = data.serverPort
 })

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useStore } from "react-redux"
 import { Form, Button, Input, Divider } from 'antd'
 import BlockWrapper from "../component/BlockWrapper"
@@ -84,7 +84,6 @@ function Setting() {
     isValid
   ])
 
-
   const createSettingConfigAction = ({
     serverAddress, 
     serverPort, 
@@ -92,7 +91,7 @@ function Setting() {
     receivePort
   }: {
     [propName: string]: string | undefined
-  }) => {
+  }): configAction => {
     return {
       type: "CONFIG",
       payload: {
@@ -136,7 +135,7 @@ function Setting() {
             ></Input>
           </Form.Item>
         </div>
-        <div>
+        {/* <div>
           <Divider orientation="left">
             广播模式配置：
           </Divider>
@@ -160,7 +159,7 @@ function Setting() {
               value={receivePort}
             ></Input>
           </Form.Item>
-        </div>
+        </div> */}
         <Button
           type="primary"
           loading={false}
@@ -171,3 +170,13 @@ function Setting() {
   )
 }
 export default Setting
+export interface configAction{
+  type: "CONFIG",
+  payload: {
+    serverAddress: string | undefined, 
+    serverPort: string | undefined, 
+    originAddress: string | undefined, 
+    receivePort: string | undefined
+  }
+
+}

@@ -1,7 +1,11 @@
-import { createStore, combineReducers } from "redux"
+import { createStore, combineReducers, applyMiddleware } from "redux"
 import { Map } from "immutable"
 import { CONFIG } from "../action"
 import { storeConfig } from "../application.json"
+import  createSagaMiddleware  from "redux-saga"
+import sagaFunction from "./saga"
+
+const sagaMiddleware = createSagaMiddleware()
 const store = createStore(combineReducers({
   config: (state: Map<string, string> = Map({...storeConfig}), action) => {
     switch(action.type) {
@@ -11,5 +15,7 @@ const store = createStore(combineReducers({
         return state
     }
   }
-}))
+}), applyMiddleware(sagaMiddleware))
+sagaMiddleware.run(sagaFunction)
+
 export default store
