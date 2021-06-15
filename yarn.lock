@@ -5423,10 +5423,10 @@ ejs@^3.1.6:
   dependencies:
     jake "^10.6.1"
 
-electron-builder@^22.11.7:
+electron-builder@^22.10.5:
   version "22.11.7"
-  resolved "https://registry.nlark.com/electron-builder/download/electron-builder-22.11.7.tgz#cd97a0d9f6e6d388112e66b4376de431cca4d596"
-  integrity sha1-zZeg2fbm04gRLma0N23kMcyk1ZY=
+  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-22.11.7.tgz#cd97a0d9f6e6d388112e66b4376de431cca4d596"
+  integrity sha512-yQExSLt7Hbz/P8lLkZDdE/OnJJ7NCX+uiQcV+XIH0TeEZcD87ZnSqBBzGUN5akySU4BXXlrVZKeUsXACWrm5Kw==
   dependencies:
     "@types/yargs" "^16.0.2"
     app-builder-lib "22.11.7"
