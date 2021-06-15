@@ -96,7 +96,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "make:deb": "yarn electron-forge make --targets @electron-forge/maker-deb",
-    "make:exe": "yarn electron-forge make --targets @electron-forge/maker-squirrel",
+    "make:exe": "yarn electron-builder",
     "package": "electron-packager ./ myapp --out ./OutApp --platform linux --architecture x64 --overwrite"
   },
   "eslintConfig": {
@@ -210,5 +210,8 @@
         }
       ]
     }
+  },
+  "build": {
+    "target": "Squirrel.Windows"
   }
 }
