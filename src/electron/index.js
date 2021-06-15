@@ -33,6 +33,15 @@ function createWindow() {
   //   mainWindow.loadURL(path.join(__dirname, "../../build/index.html"))
   // }
   mainWindow.loadFile(path.resolve(__dirname, "../build/index.html"))
+  subscribe((d) => {
+    console.log("main process 发送广播信息")
+    mainWindow.webContents.send("ntpbroadcast message", d)
+  })
+  mainWindow.addListener("close", (e) => {
+    console.log("will close")
+    subscribe(() => {})
+    e.returnValue = false
+  })
 }
 app.on('ready', createWindow)
 ipcMain.handle("invoke", (event, data) => new Promise((res, rej) => {
@@ -89,8 +98,4 @@ ipcMain.on("config", (event, data) => {
   console.log(data)
   currentServerAddress = data.serverAddress
   currentServerPort = data.serverPort
-})
-subscribe((d) => {
-  console.log("main process 发送广播信息")
-  mainWindow.webContents.send("ntpbroadcast message", d)
 })

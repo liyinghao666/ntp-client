@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { List, Button } from "antd"
 import BlockWrapper from "../component/BlockWrapper"
+import timeString from "../utils/timeString"
 interface BroadcastMessage {
   time: string,
   key: number
@@ -11,7 +12,7 @@ function NtpBroadcast() {
   const [dataList, setDataList] = useState<BroadcastMessage[]>([])
 
   const bindFunction = useCallback((message: Date) => {
-    setDataList((dataList) => [{ time: message.toString() + ':' + message.getMilliseconds(), key: Math.random() * 1000 }, ...dataList].slice(0, maxItemsOnshow))
+    setDataList((dataList) => [{ time: timeString(message), key: Math.random() * 1000 }, ...dataList].slice(0, maxItemsOnshow))
   }, [])
 
   const handleClick = useCallback(() => {

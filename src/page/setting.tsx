@@ -135,7 +135,7 @@ function Setting() {
             ></Input>
           </Form.Item>
         </div>
-        <div>
+        {/* <div>
           <Divider orientation="left">
             广播模式配置：
           </Divider>
@@ -159,7 +159,7 @@ function Setting() {
               value={receivePort}
             ></Input>
           </Form.Item>
-        </div>
+        </div> */}
         <Button
           type="primary"
           loading={false}

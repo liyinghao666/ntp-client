@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BlockWrapper from "../component/BlockWrapper"
 import { Descriptions, Button } from 'antd'
 import { useSelector } from 'react-redux'
+import timeString from "../utils/timeString"
 interface NTPCSData {
   receiveTime: Date,
   backTime: Date,
   state: string
 }
+
+let timer: NodeJS.Timeout
+let isSending = false
 function Ntpcs() {
   const [sendTime, setSendTime] = useState(new Date())
   const [receiveTime, setReceiveTime] = useState(new Date())
@@ -19,7 +23,7 @@ function Ntpcs() {
     } else return ''
   })
 
-  const handleClick = () => {
+  const handleSubmitClick = () => {
     const clickTime = new Date()
     window.api.ntpcs(serverUrl).then((data: NTPCSData) => {
       setSendTime(clickTime)
@@ -27,6 +31,26 @@ function Ntpcs() {
       setBackTime(data.backTime)
     }) 
   }
+
+  const handleConsequenceClick = () => {
+    console.log(`isSending? ${isSending}`)
+    if(isSending) {
+      isSending = false
+      clearInterval(timer)
+    } else {
+      isSending = true
+      timer = setInterval(() => {
+        handleSubmitClick()
+      }, 1000)
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      isSending = false
+      clearInterval(timer)
+    }
+  }, [])
 
   return (
     <BlockWrapper>
@@ -40,7 +64,7 @@ function Ntpcs() {
           label="发送时刻"
           span={3}
         >
-          {sendTime.toString()}:{sendTime.getMilliseconds()}
+          {timeString(sendTime)}
         </Descriptions.Item>
       </Descriptions>
       <Descriptions
@@ -53,23 +77,31 @@ function Ntpcs() {
           label="接收时刻"
           span={3}
         >
-          {receiveTime.toString()}:{receiveTime.getMilliseconds()}
+          {timeString(receiveTime)}
         </Descriptions.Item>
         <Descriptions.Item
           label="回送时刻"
           span={3}
         >
-          {backTime.toString()}:{backTime.getMilliseconds()}
+          {timeString(backTime)}
         </Descriptions.Item>
       </Descriptions>
       <Button 
         type="primary"
-        onClick={handleClick}
+        onClick={handleSubmitClick}
         style={{
           marginTop: 50,
           alignSelf: "start"
         }}  
-      >发起请求</Button>
+      >矫正系统时钟</Button>
+      <Button 
+        type="primary"
+        onClick={handleConsequenceClick}
+        style={{
+          marginTop: 30,
+          alignSelf: "start"
+        }}  
+      >连续发起请求</Button>
     </BlockWrapper>
   )
 }

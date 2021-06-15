@@ -26,11 +26,11 @@ switch (platform()) {
     console.log("无法确定操作系统!")
 }
 function setWindowsTime(date = new Date()) {
-  // 在 windows 系统中，有两个命令可以分别查询日期和时间。他们是：date & time
+  // 在 windows 系统中，有两个命令可以分别查询日期和时间。他们是：date 和 time
   // 需要在 cmd 中运行脚本才可以访问到这两个命令(因为他们是 cmd 自带的脚本)
   const year = date.getFullYear()
-  const month = date.getMonth()
-  const day = date.getDay()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
   const hour = date.getHours()
   const minute = date.getMinutes()
   const second = date.getSeconds()
@@ -48,13 +48,13 @@ function setWindowsTime(date = new Date()) {
   })
 }
 function setLinuxTime(date) {
-  const year = date.getFullYear() -10
-  const month = date.getMonth()
-  const day = date.getDay()
-  const hour = date.getHours() - 10
+  // 在Ubuntu系统中，更改系统时间的
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const hour = date.getHours()
   const minute = date.getMinutes()
   const second = date.getSeconds()
-  const timestamp = handleDate(date)
   exec(`/bin/date --set="${year}${month}${day} ${hour}${minute}${second}"`, (err, stdout, stderr) => {
     if (err || stderr) {
       console.error(err)
@@ -67,8 +67,4 @@ function setLinuxTime(date) {
 }
 function setMacOSTime() {
 
-}
-function handleDate(date) {
-  let timestamp = ''
-  return timestamp
 }

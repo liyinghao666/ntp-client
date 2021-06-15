@@ -70,9 +70,11 @@ module.exports =  function ntpCS(serverAddress = SERVER_ALI, serverPort = 123) {
     new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve({
-          state: "timeout 2s"
+          state: "timeout 2s",
+          receiveTime: new Date(0),
+          backTime: new Date(0)
         })
-      }, 2000);
+      }, 10000);
     }),
     new Promise((resolve, reject) => {
       try {
