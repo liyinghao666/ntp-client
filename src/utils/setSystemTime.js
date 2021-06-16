@@ -55,7 +55,7 @@ function setLinuxTime(date) {
   const hour = date.getHours()
   const minute = date.getMinutes()
   const second = date.getSeconds()
-  exec(`/bin/date --set="${year}${month}${day} ${hour}${minute}${second}"`, (err, stdout, stderr) => {
+  exec(`/bin/date -s "${year}${month >= 10 ? month : `0${month}`}${day >= 10 ? day : `0${day}`} ${hour >= 10 ? hour : `0${hour}`}:${minute >= 10 ? minute : `0${minute}`}:${second >= 10 ? second : `0${second}`}"`, (err, stdout, stderr) => {
     if (err || stderr) {
       console.error(err)
       console.log(stderr)
