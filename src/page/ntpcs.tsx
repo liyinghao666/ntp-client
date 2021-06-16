@@ -26,6 +26,7 @@ function Ntpcs() {
   const handleSubmitClick = () => {
     const clickTime = new Date()
     window.api.ntpcs(serverUrl).then((data: NTPCSData) => {
+      if(data.state !== "success") return
       setSendTime(clickTime)
       setReceiveTime(data.receiveTime)
       setBackTime(data.backTime)

@@ -4,15 +4,17 @@ import BlockWrapper from "../component/BlockWrapper"
 import timeString from "../utils/timeString"
 interface BroadcastMessage {
   time: string,
-  key: number
+  key: number,
+  address: string
 }
 const maxItemsOnshow = 9
 function NtpBroadcast() {
   const [listening, setListening] = useState(false)
   const [dataList, setDataList] = useState<BroadcastMessage[]>([])
 
-  const bindFunction = useCallback((message: Date) => {
-    setDataList((dataList) => [{ time: timeString(message), key: Math.random() * 1000 }, ...dataList].slice(0, maxItemsOnshow))
+  const bindFunction = useCallback((message: Date, address: string) => {
+    console.log(message, address)
+    setDataList((dataList) => [{ time: timeString(message), key: Math.random() * 1000, address}, ...dataList].slice(0, maxItemsOnshow))
   }, [])
 
   const handleClick = useCallback(() => {
@@ -49,7 +51,7 @@ function NtpBroadcast() {
         }
         dataSource={[...dataList].reverse()}
         renderItem={item => {
-          return <List.Item key={item.key}>{item.time}</List.Item>
+          return <List.Item key={item.key}>{item.time}   来自{item.address}的消息</List.Item>
         }}
       ></List>
     </BlockWrapper>

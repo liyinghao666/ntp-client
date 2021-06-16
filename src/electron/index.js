@@ -33,9 +33,9 @@ function createWindow() {
   //   mainWindow.loadURL(path.join(__dirname, "../../build/index.html"))
   // }
   mainWindow.loadFile(path.resolve(__dirname, "../build/index.html"))
-  subscribe((d) => {
+  subscribe((d, from) => {
     console.log("main process 发送广播信息")
-    mainWindow.webContents.send("ntpbroadcast message", d)
+    mainWindow.webContents.send("ntpbroadcast message", d, from)
   })
   mainWindow.addListener("close", (e) => {
     console.log("will close")

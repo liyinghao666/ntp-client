@@ -6,8 +6,9 @@ function begin() {
   console.log("broadcast begin")
 
   udpServer = dgram.createSocket("udp4")
-  udpServer.on("message", (msg) => {
+  udpServer.on("message", (msg, rinfo) => {
     console.log(`收到报文,其长度为${msg.length}\n`)
+    console.log(`报文来自地址：${rinfo.address}`)
     let result = []
     for(let i = 0; i < msg.length; i++) {
       result.push(msg[i])
@@ -26,7 +27,7 @@ function begin() {
     d.setMilliseconds(millsecond)
     d.setFullYear(d.getUTCFullYear() - 70)
     // listener(new Date())
-    listener(d)
+    listener(d, rinfo.address)
   })
   
   try {
