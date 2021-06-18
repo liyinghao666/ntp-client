@@ -10,9 +10,7 @@ const __SERVER_ADDRESS__ = process.env.SERVER_ADDRESS ? process.env.SERVER_ADDRE
 const __APP_PATH__ = app.getAppPath()
 
 let currentServerAddress,
-    currentServerPort,
-    currentOririnAddress,
-    currentOriginPort
+    currentServerPort
 let mainWindow = null
 function createWindow() {
   mainWindow = new BrowserWindow({

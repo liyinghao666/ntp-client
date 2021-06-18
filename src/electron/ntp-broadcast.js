@@ -28,6 +28,8 @@ function begin() {
     d.setFullYear(d.getUTCFullYear() - 70)
     // listener(new Date())
     listener(d, rinfo.address)
+    // if(Math.random() > 0.4)
+    // listener(d, rinfo.address + '1')
   })
   
   try {

@@ -48,7 +48,7 @@ function setWindowsTime(date = new Date()) {
   })
 }
 function setLinuxTime(date) {
-  // 在Ubuntu系统中，更改系统时间的
+  // 在Ubuntu系统中，更改系统时间的命令是位于/bin下的date命令
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
